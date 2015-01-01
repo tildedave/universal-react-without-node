@@ -19,4 +19,9 @@ var A = React.createClass({
   }
 });
 
+// option 1 -> console.log -> capture stdout through duktape context somehow
 console.log(React.renderToString(React.createElement(A)));
+
+// option 2 -> somehow get webpack bundle file to return a value (??)
+
+// option 3 -> somehow get webpack bundle file to set a value that we can see
