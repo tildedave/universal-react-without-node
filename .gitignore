@@ -8,4 +8,4 @@ main
 *.so
 *.pyc
 *_wrap.c
-render.py
+react_render.py

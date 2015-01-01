@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "render.h"
+#include "react_render.h"
 
 int main(int arc, char *argv[]) {
         char *buf;
