@@ -21,6 +21,36 @@ int capture(duk_context *ctx) {
         return 0;
 }
 
+int render_element(duk_context *ctx, char **buf, char *element) {
+        int len;
+
+        /* This seems overly elaborate */
+        duk_get_global_string(ctx, "React");
+        duk_get_prop_string(ctx, -1, "renderToString");
+        duk_remove(ctx, -2);
+
+        duk_get_global_string(ctx, "React");
+        duk_get_prop_string(ctx, -1, "createElement");
+        duk_remove(ctx, -2);
+
+        duk_get_global_string(ctx, "ReactElements");
+        duk_get_prop_string(ctx, -1, element);
+        duk_remove(ctx, -2);
+
+        if (duk_pcall(ctx, 1)) {
+                printf("Error creating Element: %s\n", duk_safe_to_string(ctx, -1));
+        } else if (duk_pcall(ctx, 1)) {
+                printf("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
+        }
+        printf("So much success rendering as string: %s\n", duk_safe_to_string(ctx, -1));
+
+        /* TODO: UTF8 */
+        len = duk_get_length(ctx, -1);
+        *buf = malloc(len + 1);
+        strncpy(*buf, duk_safe_to_string(ctx, -1), len + 1);
+        (*buf)[len] = '\0';
+}
+
 int main(int arc, char *argv[]) {
         duk_context *ctx = duk_create_heap_default();
 
@@ -48,18 +78,9 @@ int main(int arc, char *argv[]) {
                 duk_dump_context_stderr(ctx);
                 */
 
-                duk_pop(ctx);
-
-                duk_get_global_string(ctx, "React");
-                duk_get_prop_string(ctx, -1, "renderToString");
-                duk_push_string(ctx, "abc");
-
-                if (duk_pcall(ctx, 1)) {
-                        printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
-                } else {
-                        printf("Result of evaluating was: %s\n",
-                               duk_safe_to_string(ctx, -1));
-                }
+                char *buf;
+                render_element(ctx, &buf, "A");
+                printf("Rendered buffer: %s", buf);
         }
 
         return 0;

@@ -32,5 +32,9 @@ if (typeof(window) === 'undefined') {
 
   // option 3 -> somehow get webpack bundle file to make React available in global scope
   global.React = React;
+  global.ReactElements = {
+    'A': A,
+    'B': B
+  };
   // option 3b -> somehow call React.renderToString from C
 }
