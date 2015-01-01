@@ -1,7 +1,19 @@
-#include <stdio.h>
 #include "duktape.h"
 
-int render_element(duk_context *ctx, char **buf, char *element) {
+duk_context *ctx;
+
+int render_init() {
+    ctx = duk_create_heap_default();
+    if (duk_pcompile_file(ctx, 0, "bundle.js") != 0) {
+            printf("Compile error: %s\n", duk_safe_to_string(ctx, -1));
+    } else if (duk_pcall(ctx, 0)) {
+            printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
+    } else {
+            printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
+    }
+}
+
+int render_element(char **buf, char *element) {
         int len;
 
         duk_eval_string(ctx, "React.renderToString");
@@ -28,23 +40,5 @@ int render_element(duk_context *ctx, char **buf, char *element) {
         (*buf)[len] = '\0';
 
         duk_pop(ctx);
-        return 1;
-}
-
-int main(int arc, char *argv[]) {
-        duk_context *ctx = duk_create_heap_default();
-
-        if (duk_pcompile_file(ctx, 0, "bundle.js") != 0) {
-                printf("Compile error: %s\n", duk_safe_to_string(ctx, -1));
-        } else if (duk_pcall(ctx, 0)) {
-                printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
-        } else {
-                printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
-
-                char *buf;
-                render_element(ctx, &buf, "A");
-                printf("Rendered buffer: %s\n", buf);
-        }
-
         return 0;
 }
