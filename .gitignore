@@ -2,4 +2,5 @@
 duktape-*.tar.xz
 duktape-*/
 node_modules/
-out.js
+bundle.js
+main
