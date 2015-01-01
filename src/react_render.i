@@ -1,8 +1,9 @@
 %module react_render
 %{
-        extern int render_init();
-        extern char *render_element(char *element);
+        #include "react_render.h"
 %}
 
-extern int render_init();
+%rename(initialize) render_init;
+
+extern int render_init(char *path);
 extern char *render_element(char *element);
