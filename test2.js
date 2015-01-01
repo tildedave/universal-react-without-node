@@ -1,2 +1,0 @@
-capture('zomg');
-1
