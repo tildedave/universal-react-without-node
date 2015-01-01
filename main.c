@@ -35,6 +35,7 @@ int main(int arc, char *argv[]) {
                 printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
         }
 
+        /* TODO: figure out wide-character UTF8 */
         printf("Buffer is now available: %s\n", markup);
 
         duk_pop(ctx);

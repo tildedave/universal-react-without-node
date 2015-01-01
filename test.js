@@ -15,7 +15,7 @@ var React = require('react');
 
 var A = React.createClass({
   render: function() {
-    return React.DOM.div(null, 'This is my content');
+    return React.DOM.div(null, '☃');
   }
 });
 
