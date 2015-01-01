@@ -9,4 +9,3 @@ main
 *.pyc
 *_wrap.c
 render.py
-

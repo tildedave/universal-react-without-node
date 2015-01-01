@@ -1,16 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "render.h"
 
 int main(int arc, char *argv[]) {
         char *buf;
 
         render_init();
-        if (render_element(&buf, "A")) {
-                return 1;
-        }
+        buf = render_element("A");
         printf("Successfully rendered buffer: %s\n", buf);
+        free(buf);
 
-        if (render_element(&buf, "UnknownElement")) {
+        buf = render_element("UnknownElement");
+        if (buf) {
                 printf("Successfully failed to render buffer\n");
         }
 

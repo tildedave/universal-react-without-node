@@ -13,8 +13,9 @@ int render_init() {
     }
 }
 
-int render_element(char **buf, char *element) {
+char *render_element(char *element) {
         int len;
+        char *buf;
 
         duk_eval_string(ctx, "React.renderToString");
         duk_eval_string(ctx, "React.createElement");
@@ -23,22 +24,23 @@ int render_element(char **buf, char *element) {
 
         if (duk_is_undefined(ctx, -1)) {
                 printf("Could not find React Element %s\n", element);
-                return 1;
+                return 0;
         } else if (duk_pcall(ctx, 1)) {
                 printf("Error creating Element: %s\n", duk_safe_to_string(ctx, -1));
-                return 1;
+                return 0;
         } else if (duk_pcall(ctx, 1)) {
                 printf("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
-                return 1;
+                return 0;
         }
         printf("So much success rendering as string: %s\n", duk_safe_to_string(ctx, -1));
 
-        /* TODO: UTF8 */
+        /* TODO: figure out UTF8 */
         len = duk_get_length(ctx, -1);
-        *buf = malloc(len + 1);
-        strncpy(*buf, duk_safe_to_string(ctx, -1), len + 1);
-        (*buf)[len] = '\0';
+        buf = malloc(len + 1);
+        strncpy(buf, duk_safe_to_string(ctx, -1), len + 1);
+        buf[len] = '\0';
 
         duk_pop(ctx);
-        return 0;
+
+        return buf;
 }

@@ -1,2 +1,2 @@
 int render_init();
-int render_element(char **buf, char *element);
+char *render_element(char *element);

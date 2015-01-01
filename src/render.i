@@ -1,5 +1,7 @@
 %module render
 %{
-        extern int render_init();
-        extern int render_element(char **buf, char *element);
+        #include "render.h"
 %}
+
+extern int render_init();
+extern char *render_element(char *element);
