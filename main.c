@@ -1,8 +1,17 @@
 #include <stdio.h>
 #include "duktape.h"
 
+char *markup;
+
 /* TODO: better name */
 int capture(duk_context *ctx) {
+        int len = duk_get_length(ctx, -1);
+
+        /* TODO: portability ¯\_(ツ)_/¯ */
+        markup = malloc(len + 1);
+        strncpy(markup, duk_safe_to_string(ctx, -1), len);
+        markup[len] = '\0';
+
         fprintf(stdout, "captured: %s", duk_safe_to_string(ctx, -1));
         fprintf(stdout, "\n");
         fflush(stdout);
@@ -26,8 +35,9 @@ int main(int arc, char *argv[]) {
                 printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
         }
 
+        printf("Buffer is now available: %s\n", markup);
+
         duk_pop(ctx);
 
-        printf("Hello, world!\n");
         return 0;
 }
