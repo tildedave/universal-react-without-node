@@ -5,7 +5,7 @@ duk_context *ctx;
 
 int _debug = 0;
 
-void set_debug(int debug_value) {
+void render_set_debug(int debug_value) {
         _debug = debug_value;
 }
 

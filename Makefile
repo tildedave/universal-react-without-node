@@ -14,11 +14,18 @@ react_render: $(SOURCES)
 	gcc -c -fpic src/react_render.c src/react_render_wrap.c duktape-1.0.2/src/duktape.c -I /usr/local/include -I /usr/include/python2.7 -Iduktape-1.0.2/src
 	gcc -shared duktape.o react_render.o react_render_wrap.o -o python/_react_render.so
 
-bundle: test.js
-	./node_modules/.bin/webpack test.js bundle.js
+bundle: app.js
+	./node_modules/.bin/webpack
 
 test-python: bundle python react_render
 	cd python; python test.py
+
+test-python-server: test-python
+	cd python; \
+	virtualenv env ; \
+	. env/bin/activate; \
+	pip install -r requirements.txt ; \
+	python flask-server.py
 
 test-c: bundle main
 	./main

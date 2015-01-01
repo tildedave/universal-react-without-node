@@ -9,3 +9,5 @@ main
 *.pyc
 *_wrap.c
 react_render.py
+python/build/
+python/env/
