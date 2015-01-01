@@ -4,3 +4,9 @@ duktape-*/
 node_modules/
 bundle.js
 main
+*.o
+*.so
+*.pyc
+*_wrap.c
+render.py
+
