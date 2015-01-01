@@ -8,8 +8,10 @@ int capture(duk_context *ctx) {
         int len = duk_get_length(ctx, -1);
 
         /* TODO: portability ¯\_(ツ)_/¯ */
+        /* TODO: UTF length issues - no surprise */
+
         markup = malloc(len + 1);
-        strncpy(markup, duk_safe_to_string(ctx, -1), len);
+        strncpy(markup, duk_safe_to_string(ctx, -1), len + 1);
         markup[len] = '\0';
 
         fprintf(stdout, "captured: %s", duk_safe_to_string(ctx, -1));
@@ -23,6 +25,11 @@ int main(int arc, char *argv[]) {
         duk_context *ctx = duk_create_heap_default();
 
         duk_push_global_object(ctx);
+        duk_push_string(ctx, "{}");
+        duk_put_prop_string(ctx, -2, "global");
+        duk_pop(ctx);
+
+        duk_push_global_object(ctx);
         duk_push_c_function(ctx, capture, 1);
         duk_put_prop_string(ctx, -2, "capture");
         duk_pop(ctx);
@@ -33,10 +40,14 @@ int main(int arc, char *argv[]) {
                 printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
         } else {
                 printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
-        }
 
-        /* TODO: figure out wide-character UTF8 */
-        printf("Buffer is now available: %s\n", markup);
+                /* TODO: figure out wide-character UTF8 */
+                printf("Buffer is now available: %s\n", markup);
+                /*
+                duk_eval_string(ctx, "global.React.version");
+                duk_dump_context_stderr(ctx);
+                */
+        }
 
         duk_pop(ctx);
 
