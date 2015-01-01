@@ -47,9 +47,20 @@ int main(int arc, char *argv[]) {
                 duk_eval_string(ctx, "global.React.version");
                 duk_dump_context_stderr(ctx);
                 */
-        }
 
-        duk_pop(ctx);
+                duk_pop(ctx);
+
+                duk_get_global_string(ctx, "React");
+                duk_get_prop_string(ctx, -1, "renderToString");
+                duk_push_string(ctx, "abc");
+
+                if (duk_pcall(ctx, 1)) {
+                        printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
+                } else {
+                        printf("Result of evaluating was: %s\n",
+                               duk_safe_to_string(ctx, -1));
+                }
+        }
 
         return 0;
 }
