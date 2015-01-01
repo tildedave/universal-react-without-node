@@ -1,0 +1,15 @@
+{
+  "name": "isomorphic-react-without-node",
+  "version": "0.0.1",
+  "description": "Isomorphic React without a Node.js Backend",
+  "main": "init.js",
+  "dependencies": {
+    "react": "^0.12.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "duktape-1.0.2/duk init.js react-0.12.2.js test.js"
+  },
+  "author": "",
+  "license": "MIT"
+}

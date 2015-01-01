@@ -1,3 +1,5 @@
 *~
 duktape-*.tar.xz
-duktape-*/*
+duktape-*/
+node_modules/
+react-0.12.2.js
