@@ -1,6 +1,6 @@
 import react_render
 
-react_render.initialize("bundle.js")
+react_render.initialize("../bundle.js")
 a = react_render.render_element("A")
 
 print "We got back a string"
