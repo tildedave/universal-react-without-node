@@ -26,9 +26,11 @@ var B = React.createClass({
 
 if (typeof(window) === 'undefined') {
   // option 1 -> capture markup directly
-  capture(React.renderToString(React.createElement(A)));
+  //   I don't like this because it is super mysterious
+  //capture(React.renderToString(React.createElement(A)));
 
   // option 2 -> somehow get webpack bundle file to return a value (??)
+  //   this is probably not happening
 
   // option 3 -> somehow get webpack bundle file to make React available in global scope
   global.React = React;
