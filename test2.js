@@ -1,1 +1,2 @@
+capture('zomg');
 1
