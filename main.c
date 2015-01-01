@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "duktape.h"
 
+/* TODO: better name */
 int capture(duk_context *ctx) {
         fprintf(stdout, "captured: %s", duk_safe_to_string(ctx, -1));
         fprintf(stdout, "\n");
@@ -17,10 +18,11 @@ int main(int arc, char *argv[]) {
         duk_put_prop_string(ctx, -2, "capture");
         duk_pop(ctx);
 
-        if (duk_pcompile_file(ctx, 0, "test2.js") != 0) {
+        if (duk_pcompile_file(ctx, 0, "bundle.js") != 0) {
                 printf("Compile error: %s\n", duk_safe_to_string(ctx, -1));
+        } else if (duk_pcall(ctx, 0)) {
+                printf("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
         } else {
-                duk_call(ctx, 0);
                 printf("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
         }
 

@@ -19,8 +19,10 @@ var A = React.createClass({
   }
 });
 
-// option 1 -> console.log -> capture stdout through duktape context somehow
-console.log(React.renderToString(React.createElement(A)));
+if (typeof(window) === 'undefined') {
+  // option 1 -> console.log -> capture stdout through duktape global
+  capture(React.renderToString(React.createElement(A)));
+}
 
 // option 2 -> somehow get webpack bundle file to return a value (??)
 
