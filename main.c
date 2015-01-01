@@ -4,23 +4,20 @@
 int render_element(duk_context *ctx, char **buf, char *element) {
         int len;
 
-        /* This seems overly elaborate */
-        duk_get_global_string(ctx, "React");
-        duk_get_prop_string(ctx, -1, "renderToString");
-        duk_remove(ctx, -2);
+        duk_eval_string(ctx, "React.renderToString");
+        duk_eval_string(ctx, "React.createElement");
+        duk_push_sprintf(ctx, "ReactElements.%s", element);
+        duk_eval(ctx);
 
-        duk_get_global_string(ctx, "React");
-        duk_get_prop_string(ctx, -1, "createElement");
-        duk_remove(ctx, -2);
-
-        duk_get_global_string(ctx, "ReactElements");
-        duk_get_prop_string(ctx, -1, element);
-        duk_remove(ctx, -2);
-
-        if (duk_pcall(ctx, 1)) {
+        if (duk_is_undefined(ctx, -1)) {
+                printf("Could not find React Element %s\n", element);
+                return 1;
+        } else if (duk_pcall(ctx, 1)) {
                 printf("Error creating Element: %s\n", duk_safe_to_string(ctx, -1));
+                return 1;
         } else if (duk_pcall(ctx, 1)) {
                 printf("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
+                return 1;
         }
         printf("So much success rendering as string: %s\n", duk_safe_to_string(ctx, -1));
 
@@ -29,6 +26,9 @@ int render_element(duk_context *ctx, char **buf, char *element) {
         *buf = malloc(len + 1);
         strncpy(*buf, duk_safe_to_string(ctx, -1), len + 1);
         (*buf)[len] = '\0';
+
+        duk_pop(ctx);
+        return 1;
 }
 
 int main(int arc, char *argv[]) {
