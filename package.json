@@ -14,7 +14,7 @@
     "webpack": "^1.4.15"
   },
   "scripts": {
-    "test": "duktape-1.0.2/duk init.js react-0.12.2.js test.js"
+    "test": "webpack test.js out.js && duktape-1.0.2/duk out.js"
   },
   "author": "",
   "license": "MIT"
