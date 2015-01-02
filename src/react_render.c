@@ -34,18 +34,9 @@ char *render_element(char *element) {
         int len;
         char *buf;
 
-        duk_eval_string(ctx, "React.renderToString");
-        duk_eval_string(ctx, "React.createElement");
-        duk_push_sprintf(ctx, "ReactElements.%s", element);
-        duk_eval(ctx);
-
-        if (duk_is_undefined(ctx, -1)) {
-                debug("Could not find React Element %s\n", element);
-                return 0;
-        } else if (duk_pcall(ctx, 1)) {
-                debug("Error creating Element: %s\n", duk_safe_to_string(ctx, -1));
-                return 0;
-        } else if (duk_pcall(ctx, 1)) {
+        duk_eval_string(ctx, "render");
+        duk_push_sprintf(ctx, "%s", element);
+        if (duk_pcall(ctx, 1)) {
                 debug("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
                 return 0;
         }

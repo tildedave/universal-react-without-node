@@ -35,6 +35,15 @@ var Homepage = React.createClass({
     }
 });
 
+var ReactElements = {
+    'A': A,
+    'Homepage': Homepage
+};
+
+var render = function(elementName) {
+    return React.renderToString(React.createElement(ReactElements[elementName]));
+}
+
 if (typeof(window) === 'undefined') {
     // option 1 -> capture markup directly
     //   I don't like this because it is super mysterious
@@ -44,17 +53,14 @@ if (typeof(window) === 'undefined') {
     //   this is probably not happening
 
     // option 3 -> somehow get webpack bundle file to make React available in global scope
-    global.React = React;
-    global.ReactElements = {
-        'A': A,
-        'Homepage': Homepage
-    };
-
     // Still TODO - an example of calling Router.run from duktape
+
+    global.render = render;
+
 } else {
-  window.onload = function() {
     // Ideally this reads from window.location in order to determine which page is
     // rendered
     React.render(<Homepage />, document);
-  };
+
+    // When we use react router the two will end up having the same implementation
 }
