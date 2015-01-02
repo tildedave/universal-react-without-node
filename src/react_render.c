@@ -19,35 +19,12 @@ void debug(const char *fmt, ...) {
         }
 }
 
-char *render_result;
-
-int capture_render_result() {
-        /* TODO: portability ¯\_(ツ)_/¯ */
-        int len = duk_get_length(ctx, -1);
-        render_result = malloc(len + 1);
-        strncpy(render_result, duk_safe_to_string(ctx, -1), len);
-        render_result[len] = '\0';
-
-        fprintf(stdout, "captured: %s", duk_safe_to_string(ctx, -1));
-        fprintf(stdout, "\n");
-        fflush(stdout);
-
-        return 0;
-}
-
-void info(const char *fmt, ...) {
-        va_list args;
-        va_start(args, fmt);
-        vprintf(fmt, args);
-        va_end(args);
-}
-
 int render_init(const char *path) {
     ctx = duk_create_heap_default();
     if (duk_pcompile_file(ctx, 0, path) != 0) {
             debug("Compile error: %s\n", duk_safe_to_string(ctx, -1));
     } else if (duk_pcall(ctx, 0)) {
-            info("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
+            debug("Evaluation error: %s\n", duk_safe_to_string(ctx, -1));
     } else {
             debug("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
     }
@@ -59,20 +36,18 @@ char *render_element(char *element) {
 
         duk_eval_string(ctx, "render");
         duk_push_sprintf(ctx, "%s", element);
-        duk_push_c_function(ctx, capture_render_result, 1);
-
-        if (duk_pcall(ctx, 2)) {
-                info("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
+        if (duk_pcall(ctx, 1)) {
+                debug("Error rendering as string: %s\n", duk_safe_to_string(ctx, -1));
                 return 0;
         }
         debug("Successfully rendered string: %s\n", duk_safe_to_string(ctx, -1));
 
-        len = strlen(render_result);
-        buf = malloc(len);
-        strncpy(buf, render_result, len);
+        /* TODO: figure out UTF8 */
+        len = duk_get_length(ctx, -1);
+        buf = malloc(len + 1);
+        strncpy(buf, duk_safe_to_string(ctx, -1), len + 1);
         buf[len] = '\0';
 
-        /* Pop result of pcall - it was not used */
         duk_pop(ctx);
 
         return buf;
