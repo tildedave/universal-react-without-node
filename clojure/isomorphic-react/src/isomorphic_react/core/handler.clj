@@ -8,7 +8,7 @@
 (react_render/initialize  "../../bundle.js")
 
 (defroutes app-routes
-  (GET "/" [] (react_render/render_element "Page"))
+  (GET "/" [] (react_render/render_element "Homepage"))
   (route/resources "/")
   (route/not-found "Not Found"))
 

@@ -10,7 +10,7 @@ def bundle():
 
 @app.route("/")
 def root():
-    return react_render.render_element("Page")
+    return react_render.render_element("Homepage")
 
 if __name__ == "__main__":
     react_render.initialize("../bundle.js")

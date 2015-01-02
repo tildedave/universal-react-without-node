@@ -10,6 +10,6 @@ public class Test {
 
                 react_render.set_debug(1);
                 react_render.initialize("../bundle.js");
-                react_render.render_element("Page");
+                react_render.render_element("Homepage");
         }
 }

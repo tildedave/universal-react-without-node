@@ -17,7 +17,7 @@ var A = React.createClass({
     }
 });
 
-var Page = React.createClass({
+var Homepage = React.createClass({
     render: function() {
         return (
             <html>
@@ -47,11 +47,14 @@ if (typeof(window) === 'undefined') {
     global.React = React;
     global.ReactElements = {
         'A': A,
-        'Page': Page
+        'Homepage': Homepage
     };
-    // option 3b -> somehow call React.renderToString from C
+
+    // Still TODO - an example of calling Router.run from duktape
 } else {
   window.onload = function() {
-    React.render(<Page />, document);
+    // Ideally this reads from window.location in order to determine which page is
+    // rendered
+    React.render(<Homepage />, document);
   };
 }
