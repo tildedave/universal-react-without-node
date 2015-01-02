@@ -14,3 +14,8 @@ Still TODO:
 * Figure out how to inject app server path through react-router
 * Show an example of how to initialize with server-side data (e.g. Flux stores)
 * Profiling
+
+Other languages TODO:
+* Lua
+* Go
+* Non-node.js JavaScript
