@@ -8,6 +8,9 @@ main
 *.so
 *.pyc
 *_wrap.c
-react_render.py
+python/react_render.py
 python/build/
 python/env/
+*.class
+java/react_render.java
+java/*JNI.java
