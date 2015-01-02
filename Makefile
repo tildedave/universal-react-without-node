@@ -1,8 +1,13 @@
 DUKTAPE_HOME=duktape-1.0.2/src
-SOURCES=src/react_render.c src/react_render.h src/react_render.i
-SWIG_PYTHON=src/react_render_wrap.c
+SOURCES=src/react_render.c src/react_render.h src/react_render.i src/react_render_java.i
+
+INCLUDES=-I/usr/local/include -Iduktape-1.0.2/src
 PYTHON_INCLUDES=-I/usr/include/python2.7
 JAVA_INCLUDES=-I/usr/lib/jvm/java-8-oracle/include -I/usr/lib/jvm/java-8-oracle/include/linux
+SWIG_COMPILE=gcc -c -fpic src/react_render.c src/react_render_wrap.c duktape-1.0.2/src/duktape.c
+
+PYTHON_SO=python/_react_render.so
+JAVA_SO=java/libreact_render.so
 
 main: src/main.c src/react_render.c src/react_render.h
 	gcc -std=c99 src/react_render.c src/main.c $(DUKTAPE_HOME)/duktape.c -I $(DUKTAPE_HOME) -lm -o main
@@ -13,20 +18,19 @@ swig-python: $(SOURCES)
 
 swig-java: $(SOURCES)
 	rm -rf src/react_render_wrap.c
+	mkdir -p java/com/tildedave
 	swig -java -outdir java/ src/react_render.i
-
-$(SWIG_PYTHON): swig-python
 
 bundle: app.js
 	./node_modules/.bin/webpack
 
 python:  swig-python
-	gcc -c -fpic src/react_render.c src/react_render_wrap.c duktape-1.0.2/src/duktape.c -I /usr/local/include $(PYTHON_INCLUDES) -Iduktape-1.0.2/src
-	gcc -shared duktape.o react_render.o react_render_wrap.o -o python/_react_render.so
+	$(SWIG_COMPILE) $(INCLUDES) $(PYTHON_INCLUDES)
+	gcc -shared duktape.o react_render.o react_render_wrap.o -o $(PYTHON_SO)
 
 java:  swig-java
-	gcc -c -fpic src/react_render.c src/react_render_wrap.c duktape-1.0.2/src/duktape.c -I /usr/local/include $(JAVA_INCLUDES) -Iduktape-1.0.2/src
-	gcc -shared duktape.o react_render.o react_render_wrap.o -o java/libreact_render.so
+	$(SWIG_COMPILE) $(INCLUDES) $(JAVA_INCLUDES)
+	gcc -shared duktape.o react_render.o react_render_wrap.o -o $(JAVA_SO)
 
 test-python: bundle python
 	cd python; python test.py
@@ -34,6 +38,9 @@ test-python: bundle python
 test-java: bundle java
 	cd java; javac Test.java
 	cd java; LD_LIBRARY_PATH=. java -classpath . Test
+
+test-clojure: bundle java
+	cd java; LD_LIBRARY_PATH=. java -cp clojure-1.6.0/clojure-1.6.0.jar:. clojure.main test.clj
 
 test-python-server: test-python
 	cd python; \
@@ -46,4 +53,4 @@ test-c: bundle main
 	./main
 
 clean:
-	rm -f $(SWIG_PYTHON) *.o *.so *.pyc python/*.so
+	rm -f *.o *.so *.pyc python/*.so
