@@ -8,9 +8,9 @@
 (react_render/initialize  "../../bundle.js")
 
 (defroutes app-routes
-  (GET "/" [] (react_render/render_element "Homepage"))
-  (route/resources "/")
-  (route/not-found "Not Found"))
+  (route/resources "/bundle.js")
+  (GET "/favicon.ico" [] "Not Found")
+  (GET "*" {:keys [uri]} (react_render/render_path uri)))
 
 (def app
   (wrap-defaults app-routes site-defaults))

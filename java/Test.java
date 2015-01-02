@@ -6,10 +6,10 @@ public class Test {
         }
 
         public static void main(String[] args) {
-                System.out.println("Hello, JAva!");
+                System.out.println("Hello, Java!");
 
                 react_render.set_debug(1);
                 react_render.initialize("../bundle.js");
-                react_render.render_element("Homepage");
+                react_render.render_path("Homepage");
         }
 }

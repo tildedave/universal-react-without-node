@@ -15,7 +15,7 @@ def bundle():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def root(path):
-    return react_render.render_element(str(request.path))
+    return react_render.render_path(str(request.path))
 
 if __name__ == "__main__":
     react_render.initialize("../bundle.js")

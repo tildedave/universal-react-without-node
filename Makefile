@@ -49,6 +49,7 @@ test-clojure: bundle clojure
 
 test-clojure-server: bundle clojure
 	cp bundle.js clojure/isomorphic-react/resources/public/bundle.js
+	cd clojure; cp ../java/react_render*.java isomorphic-react/src/java/
 	cp $(CLOJURE_SO) clojure/isomorphic-react/; \
 	cd clojure/isomorphic-react/; \
 	lein javac; \

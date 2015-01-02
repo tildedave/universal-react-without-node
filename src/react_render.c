@@ -30,7 +30,7 @@ int render_init(const char *path) {
     }
 }
 
-char *render_element(char *element) {
+char *render_path(char *element) {
         int len;
         char *buf;
 

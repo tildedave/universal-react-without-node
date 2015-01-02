@@ -17,5 +17,5 @@ static {
 %}
 
 extern int render_init(char *path);
-extern char *render_element(char *element);
+extern char *render_path(char *element);
 extern void render_set_debug(int debug_value);
