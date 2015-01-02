@@ -14,3 +14,7 @@ python/env/
 *.class
 java/react_render.java
 java/*JNI.java
+clojure/clojure-1.6.0
+react_render.java
+react_renderJNI.java
+
