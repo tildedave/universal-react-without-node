@@ -11,7 +11,6 @@ This repository uses [Webpack](https://webpack.github.io/) to build a bundled Ja
 Still TODO:
 * Handle utf8 properly
 * Easier setup/cleaner Makefile (SWIG and Duktape need to be installed)
-* Figure out how to inject app server path through react-router
 * Show an example of how to initialize with server-side data (e.g. Flux stores)
 * Profiling
 
@@ -19,3 +18,11 @@ Other languages TODO:
 * Lua
 * Go
 * Non-node.js JavaScript
+
+# Disclaimer
+
+I wouldn't run this code in production!  Even if you *can* do these things, should you really?  (I have no idea!)  This project came out of a feeling that it would be great if the React ecosystem supported a more diverse set of server-side technologies - why should you be locked in to a node.js solution on your backend?  This repo provides the homomorphisms from your isomorphic views into the server-side language of your choice.
+
+## Other Things I've Found
+
+* https://github.com/101loops/go-reactjs/ - React.js rendering in Golang using Otto
