@@ -10,7 +10,7 @@ react_render_wrap.c : $(top_srcdir)/react_render.i
 check : libreact_render.la
 	cp .libs/libreact_render.so libreact_render.so
 	javac react_render.java
-	LD_LIBRARY_PATH=. java -cp clojure-1.6.0/clojure-1.6.0.jar:. clojure.main test.clj
+	LD_LIBRARY_PATH=. java -cp $(CLOJURE):. clojure.main test.clj && echo "Checked!"
 
 clean-local: clean-local-check
 .PHONY: clean-local-check
