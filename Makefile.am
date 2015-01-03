@@ -1,1 +1,2 @@
+AM_CFLAGS = -I$(DUKTAPE)
 SUBDIRS = src
