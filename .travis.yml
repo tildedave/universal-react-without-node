@@ -1,0 +1,14 @@
+language: c
+before_install:
+  - wget -P deps/ http://duktape.org/duktape-1.0.2.tar.xz
+  - tar xvfJ deps/duktape-1.0.2.tar.xz -C deps
+  - wget -P deps/ http://prdownloads.sourceforge.net/swig/swig-3.0.3.tar.gz
+  - tar xvfz deps/swig-3.0.3.tar.gz -C deps
+  - pushd deps/swig-3.0.3 && ./configure && make && sudo make install
+  - popd
+script:
+  - autoreconf --install
+  - export PATH="$PWD/deps/swig-3.0.3/:$PATH"
+  - ./configure DUKTAPE="$PWD/deps/duktape-1.0.2/src" CLOJURE="$PWD/deps/clojure-1.6.0-slim.jar"
+  - make
+  - make check

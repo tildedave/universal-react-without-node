@@ -19,7 +19,6 @@ for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS
 do
         JAVA_CPPFLAGS="$JAVA_CPPFLAGS -I$JNI_INCLUDE_DIR"
 done
-AC_SUBST(JAVA_CPPFLAGS)
 
 AC_ARG_VAR(DUKTAPE, Path to duktape src directory (required))
 AC_ARG_VAR(CLOJURE, Path to Clojure jar (required))
@@ -28,6 +27,9 @@ AC_CHECK_HEADERS([$DUKTAPE/duktape.h], break,
                  AC_MSG_ERROR([Couldn't find duktape.h! (Specify with DUKTAPE)]))
 AC_CHECK_FILE([$CLOJURE], break,
               AC_MSG_ERROR([Couldn't find clojure.jar!]))
+AC_CHECK_FILE([$SWIG], break, AC_MSG_ERROR([Couldn't find SWIG executable!]))
+
+AC_SUBST(JAVA_CPPFLAGS)
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile src/Makefile python/Makefile java/Makefile clojure/Makefile])
