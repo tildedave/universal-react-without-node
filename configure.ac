@@ -7,7 +7,6 @@ m4_include([m4/ax_pkg_swig.m4])
 AX_PKG_SWIG(3.0.0, [], AC_MSG_ERROR([SWIG > 3.0.0 is required to build.]))
 
 AC_ARG_VAR(duktape, Path to duktape src directory (required))
-AC_SUBST(DUKTAPE_DIR=)
 
 AC_CHECK_HEADERS([duktape.h], break, AC_MSG_ERROR([Couldn't find duktape.h!]))
 AC_CONFIG_HEADERS([config.h])
