@@ -17,4 +17,12 @@ java/*JNI.java
 clojure/clojure-1.6.0
 react_render.java
 react_renderJNI.java
+Makefile
+Makefile.in
+missing
+src/config.h
+config.log
+configure
+config.h
+config.h.in
 
