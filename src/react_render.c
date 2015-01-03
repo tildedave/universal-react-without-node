@@ -1,4 +1,5 @@
 #include "duktape.h"
+#include "config.h"
 #include <stdarg.h>
 
 duk_context *ctx;
