@@ -25,5 +25,5 @@ AC_ARG_VAR(DUKTAPE, Path to duktape src directory (required))
 
 AC_CHECK_HEADERS([$DUKTAPE/duktape.h], break, AC_MSG_ERROR([Couldn't find duktape.h!]))
 AC_CONFIG_HEADERS([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile python/Makefile java/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile python/Makefile java/Makefile clojure/Makefile])
 AC_OUTPUT
