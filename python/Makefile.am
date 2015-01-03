@@ -7,3 +7,7 @@ _react_render_la_LIBADD = ../src/libreact_render.la
 
 react_render_wrap.c : $(top_srcdir)/react_render.i
 	$(SWIG) $(SWIG_PYTHON_OPT) -I$(top_srcdir)/src -o $@ $<
+
+check : _react_render.la
+	cp .libs/_react_render.so.0.0.0 _react_render.so
+	python test.py && echo "Checked!"
