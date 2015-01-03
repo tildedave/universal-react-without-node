@@ -11,3 +11,10 @@ react_render_wrap.c : $(top_srcdir)/react_render.i
 check : _react_render.la
 	cp .libs/_react_render.so.0.0.0 _react_render.so
 	python test.py && echo "Checked!"
+
+clean-local: clean-local-check
+.PHONY: clean-local-check
+clean-local-check:
+	-rm -rf *.pyc
+	-rm -rf react_render_wrap.c
+	-rm -rf _react_render.so
