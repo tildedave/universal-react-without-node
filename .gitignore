@@ -25,4 +25,11 @@ config.log
 configure
 config.h
 config.h.in
+config.status
+aclocal.m4
+depcomp
+install-sh
+src/.deps
+autom4te.cache/
+stamp-h1
 
