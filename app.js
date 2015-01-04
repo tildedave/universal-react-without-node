@@ -110,10 +110,8 @@ var routes = (
 if (typeof(window) === 'undefined') {
     global.render = function(path) {
         var markup;
-        var callback = function(str) { markup = str; };
-
         Router.run(routes, path, function(Handler) {
-            callback(React.renderToString(<Handler />))
+            markup = React.renderToString(<Handler />);
         });
 
         return markup;
