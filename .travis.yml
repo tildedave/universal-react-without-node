@@ -11,4 +11,4 @@ script:
   - export PATH="$PWD/deps/swig-3.0.3/:$PATH"
   - ./configure DUKTAPE="$PWD/deps/duktape-1.0.2/src" CLOJURE="$PWD/deps/clojure-1.6.0-slim.jar"
   - make
-  - make check
+  - make bundle check
