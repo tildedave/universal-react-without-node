@@ -6,6 +6,7 @@ before_install:
   - tar xvfz deps/swig-3.0.3.tar.gz -C deps
   - pushd deps/swig-3.0.3 && ./configure && make && sudo make install
   - popd
+  - sudo apt-get install -y check
 script:
   - autoreconf --install
   - export PATH="$PWD/deps/swig-3.0.3/:$PATH"
