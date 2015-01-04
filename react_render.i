@@ -17,5 +17,6 @@ static {
 %}
 
 extern int render_init(char *path);
-extern char *render_path(char *element);
+extern char *render_path(char *path);
+extern char *render_element(char *element, char *props_as_json);
 extern void render_set_debug(int debug_value);

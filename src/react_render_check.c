@@ -7,6 +7,7 @@ check_path(const char *path, const char *expected) {
         char *buf;
 
         buf = render_path(path);
+        ck_assert_msg(buf, "Expected <%s> to return a valid buffer");
         ck_assert_msg(strstr(buf, expected),
                       "Expected <%s> to contain %s, actually returned %s",
                       path, expected, buf);
@@ -49,6 +50,7 @@ int main(void) {
         s = react_render_suite();
         sr = srunner_create(s);
 
+        render_set_debug(1);
         render_init("../bundle.js");
 
         srunner_run_all(sr, CK_NORMAL);

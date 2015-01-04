@@ -108,7 +108,7 @@ var routes = (
 );
 
 if (typeof(window) === 'undefined') {
-    global.render = function(path) {
+    global.renderPath = function(path) {
         var markup;
         Router.run(routes, path, function(Handler) {
             markup = React.renderToString(<Handler />);

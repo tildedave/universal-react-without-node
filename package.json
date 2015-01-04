@@ -16,7 +16,7 @@
     "webpack": "^1.4.15"
   },
   "scripts": {
-    "test": "make test"
+    "test": "make check"
   },
   "author": "",
   "license": "MIT"
