@@ -32,3 +32,4 @@ I wouldn't run this code in production!  Even if you *can* do these things, shou
 ## Other Things I've Found
 
 * https://github.com/101loops/go-reactjs/ - React.js rendering in Golang using Otto
+* https://github.com/augustl/react-nashorn-example - Renders React server-side using JDK8 + Nashorn
