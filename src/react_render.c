@@ -40,17 +40,12 @@ int register_element(duk_context *ctx) {
         struct react_element *last = elements;
 
         // this could be a lot cleaner
-        if (!last) {
-                elements = malloc(sizeof(struct react_element));
-                last = elements;
-        } else {
-                while(last->next != NULL) {
-                        last = last->next;
-                }
-
-                last->next = malloc(sizeof(struct react_element));
+        while(last->next != NULL) {
                 last = last->next;
         }
+
+        last->next = malloc(sizeof(struct react_element));
+        last = last->next;
 
         duk_size_t len;
         duk_get_lstring(ctx, -2, &len);
@@ -61,17 +56,10 @@ int register_element(duk_context *ctx) {
         strncpy(last->name, duk_get_string(ctx, -2), (unsigned long) len);
         last->name[len] = '\0';
 
-        debug("sup sup sup sup %d\n", duk_is_object(ctx, -1));
-
-        duk_dump_context_stderr(ctx);
         duk_remove(ctx, -2);
         duk_eval_string(ctx, "ReactElements");
         duk_swap(ctx, -1, -2);
-        debug("ZOMFG\n");
-        duk_dump_context_stderr(ctx);
         duk_put_prop_string(ctx, -2, last->name);
-        debug("and now with %s\n", last->name);
-        duk_dump_context_stderr(ctx);
         duk_pop(ctx);
 
         return 0;
@@ -86,6 +74,10 @@ int render_init(const char *bundle_file) {
     duk_push_object(ctx);
     duk_put_prop_string(ctx, -2, "ReactElements");
     duk_pop(ctx);
+
+    elements = malloc(sizeof(struct react_element));
+    elements->name = NULL;
+    elements->next = NULL;
 
     if (duk_pcompile_file(ctx, 0, bundle_file) != 0) {
             debug("Compile error: %s\n", duk_safe_to_string(ctx, -1));
@@ -112,7 +104,6 @@ int render_init(const char *bundle_file) {
 char *copy_buffer(duk_context *ctx, int idx) {
         char *buf;
 
-        /* TODO: figure out UTF8 */
         duk_size_t len;
         duk_get_lstring(ctx, idx, &len);
         buf = malloc((unsigned long)len + 1);
@@ -126,11 +117,8 @@ char *copy_buffer(duk_context *ctx, int idx) {
 
 char *render_element(const char *element, const char *props_as_json) {
         struct react_element *ele = elements;
-        if (!ele) {
-                return 0;
-        }
 
-        while (strcmp(ele->name, element) != 0) {
+        while (ele->name == NULL || strcmp(ele->name, element) != 0) {
                 ele = ele->next;
         }
 
