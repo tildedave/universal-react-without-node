@@ -10,7 +10,7 @@ def favicon():
 
 @app.route("/bundle.js")
 def bundle():
-    return app.send_static_file("bundle.js")
+    return app.send_static_file("bundle.router.js")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -18,7 +18,7 @@ def root(path):
     return react_render.render_path(str(request.path))
 
 if __name__ == "__main__":
-    react_render.initialize("../bundle.js")
+    react_render.initialize("../bundle.router.js")
     react_render.set_debug(1)
 
     app.run()
