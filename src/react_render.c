@@ -6,6 +6,14 @@ duk_context *ctx;
 
 int _debug = 0;
 
+struct react_element {
+        char *name;
+
+        struct react_element *next;
+};
+
+struct react_element *elements = 0;
+
 void render_set_debug(int debug_value) {
         _debug = debug_value;
 }
@@ -15,7 +23,7 @@ void debug(const char *fmt, ...) {
 
         if (_debug) {
                 va_start(args, fmt);
-                vprintf(fmt, args);
+                vfprintf(stderr, fmt, args);
                 va_end(args);
         }
 }
@@ -28,8 +36,57 @@ void error(const char *fmt, ...) {
         va_end(args);
 }
 
+int register_element(duk_context *ctx) {
+        struct react_element *last = elements;
+
+        // this could be a lot cleaner
+        if (!last) {
+                elements = malloc(sizeof(struct react_element));
+                last = elements;
+        } else {
+                while(last->next != NULL) {
+                        last = last->next;
+                }
+
+                last->next = malloc(sizeof(struct react_element));
+                last = last->next;
+        }
+
+        duk_size_t len;
+        duk_get_lstring(ctx, -2, &len);
+
+        last->name = malloc((unsigned long) len + 1);
+        last->next = 0;
+
+        strncpy(last->name, duk_get_string(ctx, -2), (unsigned long) len);
+        last->name[len] = '\0';
+
+        debug("sup sup sup sup %d\n", duk_is_object(ctx, -1));
+
+        duk_dump_context_stderr(ctx);
+        duk_remove(ctx, -2);
+        duk_eval_string(ctx, "ReactElements");
+        duk_swap(ctx, -1, -2);
+        debug("ZOMFG\n");
+        duk_dump_context_stderr(ctx);
+        duk_put_prop_string(ctx, -2, last->name);
+        debug("and now with %s\n", last->name);
+        duk_dump_context_stderr(ctx);
+        duk_pop(ctx);
+
+        return 0;
+}
+
 int render_init(const char *bundle_file) {
     ctx = duk_create_heap_default();
+
+    duk_push_global_object(ctx);
+    duk_push_c_function(ctx, register_element, 2);
+    duk_put_prop_string(ctx, -2, "registerElement");
+    duk_push_object(ctx);
+    duk_put_prop_string(ctx, -2, "ReactElements");
+    duk_pop(ctx);
+
     if (duk_pcompile_file(ctx, 0, bundle_file) != 0) {
             debug("Compile error: %s\n", duk_safe_to_string(ctx, -1));
     } else if (duk_pcall(ctx, 0)) {
@@ -37,12 +94,68 @@ int render_init(const char *bundle_file) {
     } else {
             debug("Result of evaluating was: %s\n", duk_safe_to_string(ctx, -1));
     }
+
+    // verify that our globals that we need are defined
+    if ( duk_peval_string(ctx, "renderElement") ) {
+            error("global.renderElement was not defined!  Rendering an element will not be functional.\n");
+            return 1;
+    }
+
+    if ( duk_peval_string(ctx, "renderPath") ) {
+            error("global.renderPath was not defined!  Rendering a path will not be functional.\n");
+            return 1;
+    }
+
+    return 0;
+}
+
+char *copy_buffer(duk_context *ctx, int idx) {
+        char *buf;
+
+        /* TODO: figure out UTF8 */
+        duk_size_t len;
+        duk_get_lstring(ctx, idx, &len);
+        buf = malloc((unsigned long)len + 1);
+        strncpy(buf, duk_safe_to_string(ctx, idx), (unsigned long)len);
+        buf[(unsigned long)len] = '\0';
+
+        duk_pop(ctx);
+
+        return buf;
+}
+
+char *render_element(const char *element, const char *props_as_json) {
+        struct react_element *ele = elements;
+        if (!ele) {
+                return 0;
+        }
+
+        while (strcmp(ele->name, element) != 0) {
+                ele = ele->next;
+        }
+
+        if (!ele) {
+                return 0;
+        }
+
+        duk_eval_string(ctx, "renderElement");
+        duk_push_sprintf(ctx, "ReactElements.%s", ele->name);
+        if (duk_peval(ctx)) {
+                error("Unknown error evaluating element: %s", ele->name);
+        }
+        duk_push_string(ctx, "");
+
+        if (duk_pcall(ctx, 2)) {
+                error("Error evaluating: %s\n", duk_safe_to_string(ctx, -1));
+                return 0;
+        }
+
+        debug("Successfully rendered string: %s\n", duk_safe_to_string(ctx, -1));
+
+        return copy_buffer(ctx, -1);
 }
 
 char *render_path(const char *path) {
-        int len;
-        char *buf;
-
         duk_eval_string(ctx, "renderPath");
         duk_push_sprintf(ctx, "%s", path);
         if (duk_pcall(ctx, 1)) {
@@ -51,17 +164,5 @@ char *render_path(const char *path) {
         }
         debug("Successfully rendered string: %s\n", duk_safe_to_string(ctx, -1));
 
-        /* TODO: figure out UTF8 */
-        len = duk_get_length(ctx, -1);
-        buf = malloc(len + 1);
-        strncpy(buf, duk_safe_to_string(ctx, -1), len + 1);
-        buf[len] = '\0';
-
-        duk_pop(ctx);
-
-        return buf;
-}
-
-char *render_element(const char *element, const char *props_as_json) {
-        return 0;
+        return copy_buffer(ctx, -1);
 }

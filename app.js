@@ -1,13 +1,4 @@
-if (typeof(global) !== 'undefined') {
-    function consoleShim() {
-        print(Array.prototype.join.call(arguments, ' '));
-    }
-
-    var console = {};
-    ['debug', 'log', 'info', 'warn', 'error'].forEach(function(i) {
-        console[i] = consoleShim;
-    });
-}
+require('./preamble.js');
 
 var React = require('react');
 var Link = require('react-router').Link;
@@ -24,6 +15,8 @@ var A = React.createClass({
 });
 
 var Homepage = React.createClass({
+    displayName: 'Homepage',
+
     render: function() {
         return (
             <div>
@@ -80,6 +73,16 @@ var NotFound = React.createClass({
     }
 });
 
+var UnicodeView = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <h1>Unicode Snowman for You ☃</h1>
+            </div>
+       );
+    }
+});
+
 var App = React.createClass({
     render: function() {
         return (
@@ -107,6 +110,16 @@ var routes = (
     </Route>
 );
 
+// Make these views available for server-side rendering
+// These statements could be automatically generated as part of the build (e.g. through
+// a transform-loader that files to detect certain formatted statements)
+registerElement("App", App);
+registerElement("Homepage", Homepage);
+registerElement("Red", Red);
+registerElement("Blue", Blue);
+registerElement("NotFound", NotFound);
+registerElement("UnicodeView", UnicodeView);
+
 if (typeof(window) === 'undefined') {
     global.renderPath = function(path) {
         var markup;
@@ -115,6 +128,10 @@ if (typeof(window) === 'undefined') {
         });
 
         return markup;
+    };
+
+    global.renderElement = function(element, props) {
+      return React.renderToString(React.createElement(element));
     };
 } else {
     Router.run(routes, Router.HistoryLocation, function(Handler) {

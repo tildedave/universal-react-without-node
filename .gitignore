@@ -45,3 +45,4 @@ src/.libs/
 m4/lt*.m4
 m4/libtool.m4
 py-compile
+src/react_render_check
