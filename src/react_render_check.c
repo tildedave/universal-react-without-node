@@ -14,14 +14,14 @@ void check_path(const char *path, const char *expected) {
         free(buf);
 }
 
-void check_element(const char *element, const char *expected) {
+void check_element(const char *element, const char *props_as_json, const char *expected) {
         char *buf;
 
-        buf = render_element(element, "");
+        buf = render_element(element, props_as_json);
         ck_assert_msg(buf != NULL, "Expected <%s> to return a valid buffer", element);
         ck_assert_msg(strstr(buf, expected),
-                      "Expected <%s> to contain %s, actually returned %s",
-                      element, expected, buf);
+                      "Expected <%s> with props %s to contain %s, actually returned %s",
+                      element, props_as_json, expected, buf);
         free(buf);
 }
 
@@ -39,14 +39,33 @@ END_TEST
 
 START_TEST(test_render_snowman)
 {
-        check_element("UnicodeView", "☃");
-        check_element("UnicodeView", "</div>");
+        check_element("UnicodeView", "{}", "☃");
+}
+END_TEST
+
+START_TEST(test_render_snowman_with_no_props)
+{
+        check_element("UnicodeView", NULL, "☃");
 }
 END_TEST
 
 START_TEST(test_render_snowman_closes_div_tag)
 {
-        check_element("UnicodeView", "</div>");
+        check_element("UnicodeView", "{}", "</div>");
+}
+END_TEST
+
+START_TEST(test_render_unknown_element)
+{
+        char *buf = render_element("UnknownElement", "{}");
+        ck_assert_msg(buf == NULL, "Expected UnknownElement to return an invalid buffer");
+}
+END_TEST
+
+START_TEST(test_render_with_props)
+{
+        check_element("PropsView", "{\"name\":\"Sarah\"}", "Sarah");
+        check_element("PropsView", "{\"name\":\"Geoff\"}", "Geoff");
 }
 END_TEST
 
@@ -63,7 +82,10 @@ Suite * react_render_suite()
 
         tc_core = tcase_create("render element");
         tcase_add_test(tc_core, test_render_snowman);
+        tcase_add_test(tc_core, test_render_snowman_with_no_props);
         tcase_add_test(tc_core, test_render_snowman_closes_div_tag);
+        tcase_add_test(tc_core, test_render_unknown_element);
+        tcase_add_test(tc_core, test_render_with_props);
 
         suite_add_tcase(s, tc_core);
 

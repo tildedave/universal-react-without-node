@@ -116,22 +116,29 @@ char *copy_buffer(duk_context *ctx, int idx) {
 }
 
 char *render_element(const char *element, const char *props_as_json) {
-        struct react_element *ele = elements;
+        struct react_element *ele = elements->next;
 
-        while (ele->name == NULL || strcmp(ele->name, element) != 0) {
+        while (ele != NULL && strcmp(ele->name, element) != 0) {
                 ele = ele->next;
         }
 
-        if (!ele) {
+        if (ele == NULL) {
+                error("Requested rendering an unknown element: %s\n", element);
                 return 0;
         }
 
         duk_eval_string(ctx, "renderElement");
         duk_push_sprintf(ctx, "ReactElements.%s", ele->name);
         if (duk_peval(ctx)) {
-                error("Unknown error evaluating element: %s", ele->name);
+                error("Unknown error evaluating element: %s\n", ele->name);
         }
-        duk_push_string(ctx, "");
+        if (props_as_json != NULL) {
+                duk_push_string(ctx, props_as_json);
+                duk_json_decode(ctx, -1);
+                duk_dump_context_stderr(ctx);
+        } else {
+                duk_push_null(ctx);
+        }
 
         if (duk_pcall(ctx, 2)) {
                 error("Error evaluating: %s\n", duk_safe_to_string(ctx, -1));

@@ -83,6 +83,16 @@ var UnicodeView = React.createClass({
     }
 });
 
+var PropsView = React.createClass({
+    render: function() {
+        return (
+            <div>
+                <h1>Hello, {this.props.name}!</h1>
+            </div>
+       );
+    }
+});
+
 var App = React.createClass({
     render: function() {
         return (
@@ -113,11 +123,11 @@ var routes = (
 // Make these views available for server-side rendering
 // These statements could be automatically generated as part of the build (e.g. through
 // a transform-loader that files to detect certain formatted statements)
-registerElement("App", App);
-registerElement("Homepage", Homepage);
-registerElement("Red", Red);
-registerElement("Blue", Blue);
-registerElement("NotFound", NotFound);
+//
+// React Router views are not included here - they need to be rendered within a Router.run
+// block to really work.
+
+registerElement("PropsView", PropsView);
 registerElement("UnicodeView", UnicodeView);
 
 if (typeof(window) === 'undefined') {
@@ -131,7 +141,7 @@ if (typeof(window) === 'undefined') {
     };
 
     global.renderElement = function(element, props) {
-      return React.renderToString(React.createElement(element));
+      return React.renderToString(React.createElement(element, props));
     };
 } else {
     Router.run(routes, Router.HistoryLocation, function(Handler) {
