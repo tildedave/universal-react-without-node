@@ -35,9 +35,11 @@ This is a very simple solution.  However, if you have dynamic data you will stil
 
 There are special named views that are rendered from your server.  These views are displayed outside of a routing solution.  There may be multiple on a page and React may not be your only templating solution.  You must provide special properties both client-side as well as server-side, and invoke React with the same arguments in both places.
 
-Examples of this setup can be found in `app.element.js`.  Your JavaScript should define a function `renderElement` that renders a React element with a specific name and set of properties.  On the server-side it must include a way for the client-side code to identify which elements in the markup are rendered elements, and what properties they were rendered with.  On the client-side it must discover all rendered elements by the server and re-call `renderElement` on the container object.
+Examples of this setup can be found in `app.element.js`.  Your JavaScript should define a function `renderElement` that renders a React element with a specific name and set of properties.  Your server-side rendering code must include a way for the client-side code to identify which elements in the markup are rendered elements, and which properties they were rendered with.  Your client-side code must discover all rendered elements by the server and re-call `renderElement` on the container object.
 
-This is a much more elaborate setup but has the benefit of allowing you to convert a legacy application little-by-little.  It has the disadvantage that you may make several rendering calls per page, decreasing performance.
+In this repository, this client/server "handshake" is done through a wrapper `div` that is followed by a `script` tag that populates an array `__reactElements` with the `data-reactid`, the rendered element name, and the rendered element data (escaped as a string).  This is not necessarily the best way.
+
+This more elaborate setup has the benefit of allowing you to convert a legacy application little-by-little.  It has the disadvantage that you may make several rendering calls per page, decreasing performance.
 
 ## Saturating Your Server-Side Data
 
