@@ -1,4 +1,5 @@
 from flask import Flask, request, abort
+import json
 import react_render
 
 app = Flask(__name__, static_folder="..")
@@ -12,9 +13,12 @@ def favicon():
 def bundle():
     return app.send_static_file("bundle.element.js")
 
-@app.route('/snowman')
-def snowman():
+@app.route('/')
+def root():
     return (react_render.render_element('UnicodeView', None) +
+            react_render.render_element('PropsView', json.dumps({'name': 'Sarah'})) +
+            react_render.render_element('PropsView', json.dumps({'name': 'Mark'})) +
+            react_render.render_element('UnicodeView', None) +
             '<script type="text/javascript" src="/bundle.js"></script>')
 
 if __name__ == "__main__":

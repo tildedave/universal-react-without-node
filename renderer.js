@@ -48,14 +48,16 @@ if (typeof(Duktape) === 'object') {
 
         var propsAsString = null;
         if (props) {
-            propsAsString = escape(JSON.stringify(props));
+            propsAsString = '"' + encodeURIComponent(JSON.stringify(props)) + '"';
         }
 
         // Wrapper must live outside of React or checksums mismatch
-        var scriptTag = ('<script type="text/javascript">' +
-                         'window.__reactElements = window.__reactElements || []; ' +
-                         'window.__reactElements.push(["' + id + '", "' + elementName + '", JSON.parse(unescape("' + propsAsString + '"))]);' +
-                         '</script>');
+        var scriptTag = (
+            '<script type="text/javascript">' +
+            'window.__reactElements = window.__reactElements || []; ' +
+            'window.__reactElements.push(["' + id + '", "' + elementName + '", JSON.parse(decodeURIComponent(' + propsAsString + '))]);' +
+            '</script>'
+        );
 
         return ('<div>' + markup + '</div>' + scriptTag);
     };
