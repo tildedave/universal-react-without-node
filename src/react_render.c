@@ -57,7 +57,7 @@ int register_element(duk_context *ctx) {
         last->name[len] = '\0';
 
         duk_remove(ctx, -2);
-        duk_eval_string(ctx, "ReactElements");
+        duk_eval_string(ctx, "__ReactElements");
         duk_swap(ctx, -1, -2);
         duk_put_prop_string(ctx, -2, last->name);
         duk_pop(ctx);
@@ -70,9 +70,9 @@ int render_init(const char *bundle_file) {
 
     duk_push_global_object(ctx);
     duk_push_c_function(ctx, register_element, 2);
-    duk_put_prop_string(ctx, -2, "registerElement");
+    duk_put_prop_string(ctx, -2, "__registerElement");
     duk_push_object(ctx);
-    duk_put_prop_string(ctx, -2, "ReactElements");
+    duk_put_prop_string(ctx, -2, "__ReactElements");
     duk_pop(ctx);
 
     elements = malloc(sizeof(struct react_element));
@@ -128,10 +128,8 @@ char *render_element(const char *element, const char *props_as_json) {
         }
 
         duk_eval_string(ctx, "renderElement");
-        duk_push_sprintf(ctx, "ReactElements.%s", ele->name);
-        if (duk_peval(ctx)) {
-                error("Unknown error evaluating element: %s\n", ele->name);
-        }
+        duk_push_string(ctx, ele->name);
+
         if (props_as_json != NULL) {
                 duk_push_string(ctx, props_as_json);
                 duk_json_decode(ctx, -1);
@@ -160,4 +158,24 @@ char *render_path(const char *path) {
         debug("Successfully rendered string: %s\n", duk_safe_to_string(ctx, -1));
 
         return copy_buffer(ctx, -1);
+}
+
+void render_reset() {
+        duk_destroy_heap(ctx);
+        struct react_element *element = elements;
+        struct react_element *next = NULL;
+
+        while(element != NULL) {
+                if (element->name) {
+                        free(element->name);
+                }
+                if (element->next) {
+                        next = element->next;
+                        free(element);
+                        element = next;
+                }
+                element = element->next;
+        }
+
+        element = NULL;
 }

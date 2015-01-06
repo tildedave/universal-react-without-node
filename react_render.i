@@ -5,6 +5,7 @@
 
 %rename(initialize) render_init;
 %rename(set_debug) render_set_debug;
+%rename(reset) render_reset;
 
 %pragma(java) jniclasscode=%{
 static {
@@ -20,3 +21,4 @@ extern int render_init(char *path);
 extern char *render_path(char *path);
 extern char *render_element(char *element, char *props_as_json);
 extern void render_set_debug(int debug_value);
+extern void render_reset();

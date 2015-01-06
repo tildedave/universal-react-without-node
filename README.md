@@ -13,8 +13,6 @@ This repository uses [Webpack](https://webpack.github.io/) to build a bundled Ja
 ![](https://raw.githubusercontent.com/tildedave/isomorphic-react-without-node/master/diagram.png)
 
 Still TODO:
-* Handle utf8 properly
-* Easier setup/cleaner Makefile (SWIG and Duktape need to be installed)
 * Show an example of how to initialize with server-side data (e.g. Flux stores)
 * Profiling
 
@@ -22,6 +20,18 @@ Other languages TODO:
 * Lua
 * Go
 * Non-node.js JavaScript
+
+# Main Server-Side Rendering Concepts
+
+**Rendering a Path**: You are using [react-router](https://github.com/rackt/react-router) or some similar concept.   Your app is rendered simply as a providing a path into which.
+
+**Render an Element**: You have special views that are rendered from your server.
+
+## Saturating Your Server-Side Data
+
+If your views contain dynamic data you need a way to "pre-fill" data that they rely on on the server-side.  As an example of what may happen otherwise, you may render a not-logged-in page on the server that is immediately replaced by a logged-in page on the client after a few AJAX calls are made.  Ideally you are providing the same data to the client and server to render the same markup on client and server.
+
+This repository does not yet contain examples of this.  For a good getting started guide on the general problem see the [Isomorphic Flux](https://speakerdeck.com/mridgway/isomorphic-flux) talk and the [`dispatchr`](https://github.com/yahoo/dispatchr) library.
 
 # Disclaimer
 

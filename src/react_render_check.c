@@ -69,25 +69,50 @@ START_TEST(test_render_with_props)
 }
 END_TEST
 
+void render_path_setup()
+{
+        render_set_debug(1);
+        render_init("../bundle.router.js");
+}
+
+void render_path_teardown()
+{
+        render_reset();
+}
+
+void render_element_setup()
+{
+        render_set_debug(1);
+        render_init("../bundle.element.js");
+}
+
+void render_element_teardown()
+{
+        render_reset();
+}
+
 Suite * react_render_suite()
 {
         Suite *s;
-        TCase *tc_core;
+        TCase *tc_path, *tc_element;
 
         s = suite_create("React Rendering");
 
-        tc_core = tcase_create("render path");
-        tcase_add_test(tc_core, test_render_404);
-        tcase_add_test(tc_core, test_render_root);
+        tc_path = tcase_create("render path");
+        tcase_add_checked_fixture(tc_path, render_path_setup, render_path_teardown);
+        tcase_add_test(tc_path, test_render_404);
+        tcase_add_test(tc_path, test_render_root);
 
-        tc_core = tcase_create("render element");
-        tcase_add_test(tc_core, test_render_snowman);
-        tcase_add_test(tc_core, test_render_snowman_with_no_props);
-        tcase_add_test(tc_core, test_render_snowman_closes_div_tag);
-        tcase_add_test(tc_core, test_render_unknown_element);
-        tcase_add_test(tc_core, test_render_with_props);
+        tc_element = tcase_create("render element");
+        tcase_add_checked_fixture(tc_element, render_element_setup, render_element_teardown);
+        tcase_add_test(tc_element, test_render_snowman);
+        tcase_add_test(tc_element, test_render_snowman_with_no_props);
+        tcase_add_test(tc_element, test_render_snowman_closes_div_tag);
+        tcase_add_test(tc_element, test_render_unknown_element);
+        tcase_add_test(tc_element, test_render_with_props);
 
-        suite_add_tcase(s, tc_core);
+        suite_add_tcase(s, tc_path);
+        suite_add_tcase(s, tc_element);
 
         return s;
 }
@@ -101,7 +126,7 @@ int main(void) {
         sr = srunner_create(s);
 
         render_set_debug(1);
-        render_init("../bundle.js");
+        render_init("../bundle.router.js");
 
         srunner_run_all(sr, CK_NORMAL);
         number_failed = srunner_ntests_failed(sr);

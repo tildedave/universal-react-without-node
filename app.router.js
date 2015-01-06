@@ -1,9 +1,8 @@
-require('./preamble.js');
+var registerRoutes = require('./renderer').registerRoutes;
 
 var React = require('react');
 var Link = require('react-router').Link;
 var Route = require('react-router').Route;
-var Router = require('react-router');
 var RouteHandler = require('react-router').RouteHandler;
 var DefaultRoute = require('react-router').DefaultRoute;
 var NotFoundRoute = require('react-router').NotFoundRoute;
@@ -73,26 +72,6 @@ var NotFound = React.createClass({
     }
 });
 
-var UnicodeView = React.createClass({
-    render: function() {
-        return (
-            <div>
-                <h1>Unicode Snowman for You ☃</h1>
-            </div>
-       );
-    }
-});
-
-var PropsView = React.createClass({
-    render: function() {
-        return (
-            <div>
-                <h1>Hello, {this.props.name}!</h1>
-            </div>
-       );
-    }
-});
-
 var App = React.createClass({
     render: function() {
         return (
@@ -111,7 +90,7 @@ var App = React.createClass({
     }
 });
 
-var routes = (
+registerRoutes(
     <Route handler={App} path="/">
         <DefaultRoute handler={Homepage} name="home" />
         <Route handler={Red} name="red" path="red" />
@@ -120,31 +99,6 @@ var routes = (
     </Route>
 );
 
-// Make these views available for server-side rendering
-// These statements could be automatically generated as part of the build (e.g. through
-// a transform-loader that files to detect certain formatted statements)
-//
-// React Router views are not included here - they need to be rendered within a Router.run
-// block to really work.
-
-registerElement("PropsView", PropsView);
-registerElement("UnicodeView", UnicodeView);
-
-if (typeof(window) === 'undefined') {
-    global.renderPath = function(path) {
-        var markup;
-        Router.run(routes, path, function(Handler) {
-            markup = React.renderToString(<Handler />);
-        });
-
-        return markup;
-    };
-
-    global.renderElement = function(element, props) {
-      return React.renderToString(React.createElement(element, props));
-    };
-} else {
-    Router.run(routes, Router.HistoryLocation, function(Handler) {
-        React.render(<Handler />, document);
-    });
+if (typeof(window) === 'object') {
+    require('./renderer').renderPath(require('react-router').HistoryLocation);
 }

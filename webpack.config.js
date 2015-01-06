@@ -1,7 +1,10 @@
 module.exports = {
-  entry: './app.js',
+  entry: {
+    'bundle.element': './app.element.js',
+    'bundle.router': './app.router.js'
+  },
   output: {
-    filename: 'bundle.js'
+    filename: '[name].js'
   },
   module: {
     loaders: [

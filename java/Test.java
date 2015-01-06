@@ -9,7 +9,7 @@ public class Test {
                 System.out.println("Hello, Java!");
 
                 react_render.set_debug(1);
-                react_render.initialize("../bundle.js");
+                react_render.initialize("../bundle.router.js");
                 react_render.render_path("/");
         }
 }

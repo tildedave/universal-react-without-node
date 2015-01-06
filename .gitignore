@@ -3,6 +3,8 @@ duktape-*.tar.xz
 duktape-*/
 node_modules/
 bundle.js
+bundle.router.js
+bundle.element.js
 main
 *.la
 *.a

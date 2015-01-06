@@ -5,7 +5,7 @@
 
 (clojure.lang.RT/loadLibrary "react_render")
 (react_render/set_debug 1)
-(react_render/initialize  "../../bundle.js")
+(react_render/initialize  "../../bundle.router.js")
 
 (defroutes app-routes
   (route/resources "/bundle.js")
