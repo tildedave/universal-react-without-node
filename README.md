@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/tildedave/isomorphic-react-without-node.svg?branch=master)](https://travis-ci.org/tildedave/isomorphic-react-without-node)
 
-This repository contains examples how you can render React both client and server-side without using a node.js backend.
+This repository contains examples of how you can render React both client and server-side without using a node.js backend.
 
 Why might you want to do that?  Maybe after years of dealing with npm outages and unstable libraries you long for the simplicity of languages without package managers inside of package managers.  Maybe the recent node.js fork has you scared and evaluating other technology.  Maybe you just aren't allowed to use Node at your job.  Whatever your reasons are I'm certainly not going to judge.
 
