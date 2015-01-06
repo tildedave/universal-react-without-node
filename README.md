@@ -23,9 +23,21 @@ Other languages TODO:
 
 # Main Server-Side Rendering Concepts
 
-**Rendering a Path**: You are using [react-router](https://github.com/rackt/react-router) or some similar concept.   Your app is rendered simply as a providing a path into which.
+## Rendering a Path
 
-**Render an Element**: You have special views that are rendered from your server.
+You are using [react-router](https://github.com/rackt/react-router) or some similar concept.   Your app is rendered simply as a providing a path from the server-side to your JavaScript.
+
+Examples of this setup can be found in `app.router.js`.  Your JavaScript should define a function `renderPath` that calls into `react-router` with the appropriate path (either server or client side).
+
+This is a very simple solution.  However, if you have dynamic data you will still need to saturate any data from the server-side to generate a custom page (see below).
+
+## Rendering an Element
+
+There are special named views that are rendered from your server.  These views are displayed outside of a routing solution.  There may be multiple on a page and React may not be your only templating solution.  You must provide special properties both client-side as well as server-side, and invoke React with the same arguments in both places.
+
+Examples of this setup can be found in `app.element.js`.  Your JavaScript should define a function `renderElement` that renders a React element with a specific name and set of properties.  On the server-side it must include a way for the client-side code to identify which elements in the markup are rendered elements, and what properties they were rendered with.  On the client-side it must discover all rendered elements by the server and re-call `renderElement` on the container object.
+
+This is a much more elaborate setup but has the benefit of allowing you to convert a legacy application little-by-little.  It has the disadvantage that you may make several rendering calls per page, decreasing performance.
 
 ## Saturating Your Server-Side Data
 
