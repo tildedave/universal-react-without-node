@@ -37,6 +37,7 @@ registerElement("UnicodeView", UnicodeView);
 if (typeof(window) === 'object') {
     var elements = document.querySelectorAll("[data-element]");
     Array.prototype.forEach.call(elements, function(ele) {
+        // TODO: props
         require('./renderer').renderElement(ele.dataset.element, null, ele);
     });
 }
