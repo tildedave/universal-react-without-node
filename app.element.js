@@ -4,10 +4,15 @@ var registerElement = require('./renderer').registerElement;
 var React = require('react');
 
 var UnicodeView = React.createClass({
+    onClick: function() {
+        alert('Snowmen are the best!');
+    },
+
     render: function() {
         return (
             <div>
                 <h1>Unicode Snowman for You ☃</h1>
+                <a onClick={this.onClick}>Click here</a>
             </div>
        );
     }
@@ -32,12 +37,3 @@ var PropsView = React.createClass({
 
 registerElement("PropsView", PropsView);
 registerElement("UnicodeView", UnicodeView);
-
-
-if (typeof(window) === 'object') {
-    var elements = document.querySelectorAll("[data-element]");
-    Array.prototype.forEach.call(elements, function(ele) {
-        // TODO: props
-        require('./renderer').renderElement(ele.dataset.element, null, ele);
-    });
-}

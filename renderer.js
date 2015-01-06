@@ -40,12 +40,24 @@ if (typeof(Duktape) === 'object') {
     };
 
     renderElement = function(elementName, props) {
+        var re = /data-reactid="([^"]*)"/;
+        var markup = React.renderToString(
+            React.createElement(ReactElements[elementName], props)
+        );
+        var id = re.exec(markup)[1];
+
+        var propsAsString = null;
+        if (props) {
+            propsAsString = escape(JSON.stringify(props));
+        }
+
         // Wrapper must live outside of React or checksums mismatch
-        return ('<div data-element="' + elementName + '">' +
-                React.renderToString(
-                    React.createElement(ReactElements[elementName], props)
-                ) +
-                '</div>');
+        var scriptTag = ('<script type="text/javascript">' +
+                         'window.__reactElements = window.__reactElements || []; ' +
+                         'window.__reactElements.push(["' + id + '", "' + elementName + '", JSON.parse(unescape("' + propsAsString + '"))]);' +
+                         '</script>');
+
+        return ('<div>' + markup + '</div>' + scriptTag);
     };
 
     // Also make these functions available for server-side rendering
@@ -62,6 +74,13 @@ if (typeof(Duktape) === 'object') {
     renderElement = function(element, props, ele) {
         React.render(React.createElement(ReactElements[element], props), ele);
     };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        window.__reactElements.forEach(function(eleData) {
+            var ele = document.querySelector('[data-reactid="' + eleData[0] + '"]');
+            renderElement(eleData[1], eleData[2], ele.parentNode);
+        });
+    });
 }
 
 module.exports = {
