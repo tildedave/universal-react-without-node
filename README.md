@@ -62,3 +62,5 @@ I wouldn't run this code in production!  Even if you *can* do these things, shou
 * https://github.com/augustl/react-nashorn-example - Renders React server-side using JDK8 + Nashorn
 * http://www.crmarsh.com/react-ssr/ - Rendering React on the Server - talks through the client/server handshake challenge.  Slightly easier implementation as React is available in the global scope rather than Webpacked.
 * https://github.com/olebedev/go-duktape - Duktape bindings for Golang
+* https://github.com/reactjs/react-php-v8js - React in PHP using embedded V8
+* http://winterbe.com/posts/2015/02/16/isomorphic-react-webapps-on-the-jvm/ - Isomorphic React in Java w/Nashorn
