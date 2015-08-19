@@ -1,6 +1,6 @@
-# Isomorphic React (without Node.js)
+# Universal React (without Node.js)
 
-[![Build Status](https://travis-ci.org/tildedave/isomorphic-react-without-node.svg?branch=master)](https://travis-ci.org/tildedave/isomorphic-react-without-node)
+[![Build Status](https://travis-ci.org/tildedave/universal-react-without-node.svg?branch=master)](https://travis-ci.org/tildedave/universal-react-without-node)
 
 This repository contains examples of how you can render React both client and server-side without using a node.js backend.
 
@@ -10,7 +10,7 @@ This repository uses [Webpack](https://webpack.github.io/) to build a bundled Ja
 
 # Diagram of the Technologies Involved
 
-![](https://raw.githubusercontent.com/tildedave/isomorphic-react-without-node/master/diagram.png)
+![](https://raw.githubusercontent.com/tildedave/universal-react-without-node/master/diagram.png)
 
 Still TODO:
 * Show an example of how to initialize with server-side data (e.g. Flux stores)
