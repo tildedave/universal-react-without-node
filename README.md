@@ -4,8 +4,6 @@
 
 This repository contains examples of how you can render React both client and server-side without using a node.js backend.
 
-Why might you want to do that?  Maybe after years of dealing with npm outages and unstable libraries you long for the simplicity of languages without package managers inside of package managers.  Maybe the recent node.js fork has you scared and evaluating other technology.  Maybe you just aren't allowed to use Node at your job.  Whatever your reasons are I'm certainly not going to judge.
-
 This repository uses [Webpack](https://webpack.github.io/) to build a bundled JavaScript file, uses [Duktape](http://duktape.org) to execute it in a C module, and [SWIG](http://swig.org) to make the C module available to higher-level languages that most of the web is developed in.
 
 # Diagram of the Technologies Involved
@@ -52,9 +50,9 @@ This repository does not yet contain examples of this.  For a good getting start
 
 # Disclaimer
 
-I wouldn't run this code in production!  Even if you *can* do these things, should you really?  (I have no idea!)  This project came out of a feeling that it would be great if the React ecosystem supported a more diverse set of server-side technologies - why should you be locked in to a node.js solution on your backend?  This repo provides the homomorphisms from your JavaScript views into the server-side language of your choice.
+We ran something like this at Tilt for a few years since all our application logic for consuming the API was in the Perl application server and there was a lot of tech debt around properties set in the web application server vs our internal API's application server.  Rather than use duktape we used the V8 engine with the [JavaScript::V8](http://search.cpan.org/~dgl/JavaScript-V8-0.07/lib/JavaScript/V8.pm) package.  It ended up working decently well with some gotchas (every Dancer process had a V8 context in memory which was around ~100 MB of memory per process).
 
-(Yes node.js is still used to generate the bundle.)
+I'm not sure how useful this sort of project would be in a non-technical debt situation but this helped us manage our technology transition a little better by making it so we could gradually adopt React in pages served by the old application server.
 
 ## Other Things I've Found
 
